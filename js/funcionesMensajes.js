@@ -7,21 +7,18 @@ function traerInformacionMensajes(){
             error : function(xhr, status) {
                 alert('ha sucedido un problema, '+xhr.status);
             },
-            complete : function(xhr, status) {
-                alert('Petición realizada, '+xhr.status);
-            },
             success : function(resultado) {
                 $("#resultado").empty();
                 tabla = "<center><table border='1'><tr><th>ID<th>Mensaje<th>Acciones"
                 filas = ""
                 for(i = 0;  i < resultado.items.length; i++){
                    filas += "<tr>"
-                   filas +="<td>"+resultado.items[i].id  
-                   filas +="<td>"+resultado.items[i].messagetext
-                   filas +="<td><button onclick='eliminarDoctor("+resultado.items[i].id+")'>Eliminar</button>"
-                   filas += "<button onclick='actualizarDoctor("+resultado.items[i].id+")'>Actualizar</button>"
+                   filas +="<td>"+resultado.items[i].id+"</td>"  
+                   filas +="<td>"+resultado.items[i].messagetext+"</td>"
+                   filas +="<td><button onclick='eliminarMensaje("+resultado.items[i].id+")'>Eliminar</button>"
+                   filas += "<button onclick='actualizarMensaje("+resultado.items[i].id+")'>Actualizar</button>"
                 }
-                $("#resultado").append(tabla + filas+"</center>")
+                $("#resultado").append(tabla + filas+"</tr></table></center>")
                 console.log(resultado)
             }
         });
@@ -42,11 +39,11 @@ function buscarPorIDMensajes(id){
                     console.log(resultado)
                     $("#resultado").empty();
                     filas += "<tr>"
-                    filas +="<td>"+resultado.items[0].id  
-                    filas +="<td>"+resultado.items[0].messagetext
-                    filas +="<td><button onclick='eliminarDoctor("+resultado.items[0].id+")'>Eliminar</button>"
-                    filas += "<button onclick='actualizarDoctor("+resultado.items[0].id+")'>Actualizar</button>"
-                    $("#resultado").append(tabla + filas+"</center>")  
+                    filas +="<td>"+resultado.items[0].id+"</td>"  
+                    filas +="<td>"+resultado.items[0].messagetext+"</td>"
+                    filas +="<td><button onclick='eliminarMensaje("+resultado.items[0].id+")'>Eliminar</button>"
+                    filas += "<button onclick='actualizarMensaje("+resultado.items[0].id+")'>Actualizar</button>"
+                    $("#resultado").append(tabla + filas+"</tr></table></center>")  
                 }
                 else{
                     alert("Doctor con ID "+id.val()+" no existe")
@@ -80,19 +77,21 @@ function guardarMensaje(){
         complete : function(xhr, status) {
             alert('Petición realizada '+xhr.status);
             limpiarFormulario();
+            window.location.href="mensajes.html";
         }
     });
 }
 
-function eliminarMensaje(idDoctor){
-    console.log(idDoctor);
-    var idD=idDoctor;
+function eliminarMensaje(idMensaje){
+    var datos={id:idMensaje}
+    console.log(idMensaje);
+    
     $.ajax({    
         url : 'https://g1a87438372da7f-database1.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/message/message',
-        data : { 
-                id: 25 },
+        data: JSON.stringify(datos),
+        contentType: 'application/json',
+        dataType: 'text',
         type : 'DELETE',
-        dataType: 'JSON',
         success : function(json, textStatus, xhr) {
     
         
@@ -105,7 +104,56 @@ function eliminarMensaje(idDoctor){
             alert('Petición realizada '+xhr.status);
         }
     }); 
-    traerInformacionDoctores();   
+    traerInformacionMensajes();   
+}
+
+function actualizarMensaje(idMensaje){
+    console.log(idMensaje)
+    location.href="actualizarMensajes.html?variable="+idMensaje+"";
+}
+
+function cargarDatosMensaje(id){
+        $.ajax({    
+            url : 'https://g1a87438372da7f-database1.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/message/message/'+id,
+            dataType : 'JSON',
+            type : 'GET',
+            success : function(resultado) {
+                $("#id").val(resultado.items[0].id)  
+                $("#messagetext").val(resultado.items[0].messagetext) 
+            },
+            error : function(xhr, status) {
+                alert('ha sucedido un problema'+ xhr.status);
+            }
+        });
+}
+
+function editarMensaje(){ 
+    var datos={
+        id:$("#id").val(),
+        messagetext:$("#messagetext").val()
+        }
+
+    $.ajax({    
+        url : 'https://g1a87438372da7f-database1.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/message/message',
+        data: JSON.stringify(datos),
+        contentType: 'application/json',
+        dataType: 'text',
+        type : 'PUT',
+        dataType: 'JSON',
+        success : function(json, textStatus, xhr) {
+    
+        
+        },
+        error : function(xhr, status) {
+           
+            
+        },
+        complete : function(xhr, status) {
+            alert('Petición realizada '+xhr.status);
+            limpiarFormulario();
+            window.location.href="mensajes.html";
+        }
+    });
 }
 
 function validarCampo(campo){
@@ -117,4 +165,5 @@ function validarCampo(campo){
 
 function limpiarFormulario(){
     $("#messagetext").val("");
+    $("#id").val("");
 }
