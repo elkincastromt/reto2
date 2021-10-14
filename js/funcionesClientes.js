@@ -110,7 +110,7 @@ function eliminarCliente(idCliente){
             alert('Petición realizada '+xhr.status);
         }
     }); 
-    traerInformacionClientes();   
+    window.location.href="clientes.html";   
 }
 
 function actualizarCliente(idClient){

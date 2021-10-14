@@ -113,7 +113,7 @@ function eliminarDoctor(idDoctor){
             alert('Petición realizada '+xhr.status);
         }
     }); 
-    traerInformacionDoctores();   
+    window.location.href="doctores.html";  
 }
 
 function actualizarDoctor(idDoctor){

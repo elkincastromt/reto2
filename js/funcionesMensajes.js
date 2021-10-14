@@ -104,7 +104,7 @@ function eliminarMensaje(idMensaje){
             alert('Petición realizada '+xhr.status);
         }
     }); 
-    traerInformacionMensajes();   
+    window.location.href="mensajes.html";   
 }
 
 function actualizarMensaje(idMensaje){
