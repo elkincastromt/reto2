@@ -83,7 +83,7 @@ function guardarCliente(){
         complete : function(xhr, status) {
             alert('Petición realizada '+xhr.status);
             limpiarFormulario();
-            window.location.href="Clientes.html";
+            window.location.href="clientes.html";
         }
     });
 }
@@ -161,7 +161,7 @@ $.ajax({
     complete : function(xhr, status) {
         alert('Petición realizada '+xhr.status);
         limpiarFormulario();
-        window.location.href="Clientes.html";
+        window.location.href="clientes.html";
     }
 });
 }
